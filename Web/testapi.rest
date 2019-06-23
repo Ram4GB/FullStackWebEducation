@@ -1,0 +1,16 @@
+###
+POST https://restdb-9705.restdb.io/rest/api-users HTTP/1.1
+x-apikey : 077fc93c142a81fc398843870836a97d69ab8
+Content-Type: application/json
+
+{
+    "name": "Ninh22",
+    "email": "ninh22@gmail.com"
+}
+###
+GET https://restdb-9705.restdb.io/rest/api-users HTTP/1.1
+x-apikey : 077fc93c142a81fc398843870836a97d69ab8
+
+###
+DELETE https://restdb-9705.restdb.io/rest/api-users/5ce2dd9ea21a071f00019174 HTTP/1.1
+x-apikey : 077fc93c142a81fc398843870836a97d69ab8

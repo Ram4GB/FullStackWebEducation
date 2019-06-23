@@ -1,0 +1,6 @@
+node_modules
+test.js
+migrations
+seeders
+views
+package-lock.json
