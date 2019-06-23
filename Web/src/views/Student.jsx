@@ -6,14 +6,14 @@ import AddStudentForm from "../components/Formbase/AddStudentForm";
 import EditStudentForm from "../components/Formbase/EditStudentForm";
 import { Link } from "react-router-dom";
 import TableStudent from "../components/TableBase/TableStudent";
-import Axios from "axios";
+import * as actions from "../actions/actions";
 import ExportTableStudentToExcel from "../components/ExportToExcelBase/ExportTableStudentToExcel";
+import { connect } from "react-redux";
 
 class Student extends Component {
   state = {
     isAddStudentFormOpen: false,
     isEditStudentFormOpen: false,
-    dataSource: [],
     currentEditId: ""
   };
 
@@ -21,13 +21,8 @@ class Student extends Component {
     this.setState({ [stateKey]: !this.state[stateKey] });
   };
 
-  getData = async () => {
-    const res = await Axios.get("/students");
-    this.setState({ ...this.state, dataSource: res.data });
-  };
-
   async componentDidMount() {
-    await this.getData();
+    this.props.fetchDataRequest();
   }
 
   handleOpenEdit = id => {
@@ -40,6 +35,8 @@ class Student extends Component {
 
   render() {
     const { isAddStudentFormOpen, isEditStudentFormOpen } = this.state;
+    const { students } = this.props;
+    console.log(students);
     return (
       <Main>
         <h1 style={{ fontSize: "2em", color: "gray" }}>Student Manager</h1>
@@ -60,7 +57,6 @@ class Student extends Component {
           style={{ top: 10 }}
         >
           <AddStudentForm
-            getData={this.getData}
             toggleModal={() => this.toggleBoolean("isAddStudentFormOpen")}
           />
         </Modal>
@@ -82,20 +78,35 @@ class Student extends Component {
         </Modal>
         {/* Table Student */}
         <Divider />
-        {this.state.dataSource && this.state.dataSource[0] && (
+        {students && students[0] && (
           <TableStudent
-            getData={this.getData}
             handleOpenEdit={this.handleOpenEdit}
             toggleEdit={() => this.toggleBoolean("isEditStudentFormOpen")}
-            dataSource={this.state.dataSource}
+            students={students}
           />
         )}
         {/* export from excel */}
 
-        <ExportTableStudentToExcel dataSource={this.state.dataSource} />
+        <ExportTableStudentToExcel students={students} />
       </Main>
     );
   }
 }
 
-export default Student;
+const mapStateToProps = state => {
+  return {
+    students: state.StudentReducer.students
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchDataRequest: function() {
+      return dispatch(actions.fetchDataRequest());
+    }
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Student);

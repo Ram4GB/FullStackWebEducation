@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Form, Input, Button, Row, Col, Select, message } from "antd";
 import Axios from "axios";
+import { connect } from "react-redux";
+import * as actions from "../../actions/actions";
 
 class AddStudentForm extends Component {
   state = {
@@ -42,14 +44,8 @@ class AddStudentForm extends Component {
         // },
       };
       console.log(newStudent);
-      await Axios.post(`/students`, newStudent)
-        .then(res => {
-          message.success("Success");
-          this.props.getData();
-          this.props.toggleModal();
-          console.log(res);
-        })
-        .catch(err => message.error(err.message));
+      await this.props.addDataRequest(newStudent);
+      this.props.toggleModal();
     });
   };
   render() {
@@ -115,38 +111,15 @@ class AddStudentForm extends Component {
 }
 
 AddStudentForm.propTypes = {};
-
-export default Form.create({ name: "add-student-form" })(AddStudentForm);
-//<div>Scores</div>;
-// <Row type="flex" justify="space-around">
-//   {/* math */}
-//   <Col span={7}>
-//     <Form.Item label="Math">
-//       {form.getFieldDecorator('math', {
-//         rules: [
-//           { required: true, message: 'Please input this field!' },
-//         ],
-//       })(<Input type="number" />)}
-//     </Form.Item>
-//   </Col>
-//   {/* physical */}
-//   <Col span={7}>
-//     <Form.Item label="Physical">
-//       {form.getFieldDecorator('physical', {
-//         rules: [
-//           { required: true, message: 'Please input this field!' },
-//         ],
-//       })(<Input type="number" />)}
-//     </Form.Item>
-//   </Col>
-//   {/* chemistry */}
-//   <Col span={7}>
-//     <Form.Item label="Chemistry">
-//       {form.getFieldDecorator('chemistry', {
-//         rules: [
-//           { required: true, message: 'Please input this field!' },
-//         ],
-//       })(<Input type="number" />)}
-//     </Form.Item>
-//   </Col>
-// </Row>
+const mapStateToProps = state => {
+  return {};
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    addDataRequest: newStudent => dispatch(actions.addDataRequest(newStudent))
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Form.create({ name: "add-student-form" })(AddStudentForm));

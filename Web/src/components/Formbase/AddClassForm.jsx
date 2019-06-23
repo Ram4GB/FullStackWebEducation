@@ -13,7 +13,7 @@ class AddClassForm extends Component {
   }
   handleAdd = e => {
     e.preventDefault();
-    this.props.form.validateFields((err, value) => {
+    this.props.form.validateFields(async (err, value) => {
       if (err) {
         console.log(err);
         return;
@@ -22,7 +22,7 @@ class AddClassForm extends Component {
         name: value.name
       };
       console.log(newClass);
-      Axios.post(`/classes`, newClass).then(res => {
+      await Axios.post(`/classes`, newClass).then(res => {
         console.log(res);
         message.success("Success");
         this.props.getData();

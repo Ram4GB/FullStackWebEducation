@@ -2,12 +2,14 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Axios from "axios";
 import { Table, Button, Icon, Popconfirm } from "antd";
+import { connect } from "react-redux";
+import * as actions from "../../actions/actions";
 
-export default class TableStudent extends Component {
+class TableStudent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataSource: [],
+      students: [],
       conlumns: [
         {
           title: "Student ID",
@@ -25,34 +27,6 @@ export default class TableStudent extends Component {
           title: "Class",
           dataIndex: "SchoolClass.name"
         },
-        // {
-        //   title: 'Toán',
-        //   dataIndex: 'scores.math',
-        // },
-        // {
-        //   title: 'Lý',
-        //   dataIndex: 'scores.physical',
-        // },
-        // {
-        //   title: 'Hóa',
-        //   dataIndex: 'scores.chemistry',
-        // },
-        // {
-        //   align: 'center',
-        //   title: 'Điểm trung bình',
-        //   render: (text, record) => {
-        //     return (
-        //       <p>
-        //         {Math.floor(
-        //           (record.scores.math +
-        //             record.scores.physical +
-        //             record.scores.chemistry) /
-        //             3,
-        //         )}
-        //       </p>
-        //     );
-        //   },
-        // },
         {
           title: "Chức năng",
           render: (text, record) => (
@@ -86,24 +60,36 @@ export default class TableStudent extends Component {
   }
 
   handleDelete = async id => {
-    await Axios({
-      url: `/students/${id}`, // http://localhost:5050/students/:id,
-      method: "DELETE"
-    });
-    this.props.getData();
+    await this.props.removeDataRequest(id);
   };
   render() {
     const { conlumns } = this.state;
-    const { dataSource } = this.props;
+    const { students } = this.props;
     return (
       <div>
         <Table
           bordered={true}
           rowKey={u => u.id}
           columns={conlumns}
-          dataSource={dataSource}
+          dataSource={students}
         />
       </div>
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {};
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    removeDataRequest: id => {
+      return dispatch(actions.removeDataRequest(id));
+    }
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TableStudent);
